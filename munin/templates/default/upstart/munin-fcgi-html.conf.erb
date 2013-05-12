@@ -1,0 +1,21 @@
+description "munin-fcgi-html"
+
+start on (filesystem and net-device-up IFACE=lo)
+stop on runlevel [!2345]
+
+expect fork
+respawn
+
+pre-start script
+    mkdir -p <%= node.munin.rundir %>
+    LOG=<%= node.munin.logdir %>/munin-cgi-html.log
+    touch $LOG
+    chown <%= node.munin.user%>:<%= node.nginx.group %> $LOG
+    chmod 0660 $LOG
+end script
+
+exec spawn-fcgi \
+    -s <%= node.munin.rundir %>/munin-fcgi-html.sock \
+    -u <%= node.nginx.user %> \
+    -U <%= node.nginx.user %> \
+    <%= node.munin.cgidir %>/munin-cgi-html

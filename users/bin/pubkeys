@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+data = {
+  'id'      => 'pubkeys',
+  'pubkeys' => {},
+}
+
+ARGV.each do |path|
+  user = File.basename(path, '.pub')
+  data['pubkeys'][user] ||= []
+  data['pubkeys'][user] << File.read(path).strip
+end
+
+puts data.to_json(
+  indent:    ' ' * 2,
+  space:     ' ',
+  object_nl: "\n",
+  array_nl:  "\n"
+)

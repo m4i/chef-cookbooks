@@ -1,0 +1,53 @@
+<%=node.munin.logdir %>/munin-update.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 640 <%= node.munin.user %> <%= node.platform == 'ubuntu' ? 'adm' : node.munin.group %>
+}
+
+<%=node.munin.logdir %>/munin-limits.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 640 <%= node.munin.user %> <%= node.platform == 'ubuntu' ? 'adm' : node.munin.group %>
+}
+
+<%=node.munin.logdir %>/munin-graph.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 640 <%= node.munin.user %> <%= node.platform == 'ubuntu' ? 'adm' : node.munin.group %>
+}
+
+<%=node.munin.logdir %>/munin-html.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 640 <%= node.munin.user %> <%= node.platform == 'ubuntu' ? 'adm' : node.munin.group %>
+}
+
+<%=node.munin.logdir %>/munin-cgi-graph.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 660 <%= node.munin.user %> <%= node.nginx.group %>
+}
+
+<%=node.munin.logdir %>/munin-cgi-html.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    notifempty
+    create 660 <%= node.munin.user %> <%= node.nginx.group %>
+}

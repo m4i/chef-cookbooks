@@ -1,0 +1,56 @@
+user      <%= node.nginx.user %> <%= node.nginx.group %>;
+error_log <%= node.nginx.log_dir %>/error.log warn;
+pid       <%= node.nginx.pid_path %>;
+lock_file <%= node.nginx.lock_path %>;
+
+worker_processes <%= node.nginx.conf.worker_processes %>;
+events {
+    worker_connections <%= node.nginx.conf.worker_connections %>;
+}
+
+http {
+    keepalive_timeout 10;
+    sendfile          on;
+    server_tokens     off;
+    tcp_nopush        on;
+
+    include      mime.types;
+    default_type application/octet-stream;
+
+    gzip            on;
+    gzip_disable    "msie6";
+    gzip_min_length 1000;
+    gzip_proxied    any;
+    gzip_static     on;
+    gzip_types      application/json
+                    application/x-javascript
+                    application/xml
+                    application/xml+rss
+                    text/css
+                    text/javascript
+                    text/plain
+                    text/xml;
+
+    access_log off;
+    log_format ltsv "time:$time_local"
+                    "\thost:$remote_addr"
+                    "\tforwardedfor:$http_x_forwarded_for"
+                    "\treq:$request"
+                    "\tstatus:$status"
+                    "\tsize:$body_bytes_sent"
+                    "\treferer:$http_referer"
+                    "\tua:$http_user_agent"
+                    "\treqtime:$request_time"
+                    "\tcache:$upstream_http_x_cache"
+                    "\truntime:$upstream_http_x_runtime"
+                    "\tvhost:$host";
+
+    server {
+        listen      80 default_server;
+        server_name fallback;
+        deny        all;
+    }
+
+    include conf.d/*.conf;
+    include sites/*.conf;
+}

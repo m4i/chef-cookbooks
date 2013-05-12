@@ -1,0 +1,7 @@
+server {
+    listen      80;
+    server_name <%= node.munin.www_host %>;
+
+    include <%= node.munin.www_host %>/*.conf
+    include server-common.conf;
+}

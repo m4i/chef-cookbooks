@@ -1,0 +1,17 @@
+includedir <%= node.munin.confdir %>/munin-conf.d
+
+html_strategy  cgi
+graph_strategy cgi
+
+<%- if node.munin.monitor_localhost -%>
+[localhost.localdomain]
+    address 127.0.0.1
+    use_node_name yes
+<%- end -%>
+<%- (node.munin[:nodes] || []).each do |node| -%>
+[<%= "#{node.group};" if node[:group] %><%= node.name %>]
+    address <%= node.address %>
+    <%- unless node[:use_node_name] == false -%>
+    use_node_name yes
+    <%- end -%>
+<%- end -%>

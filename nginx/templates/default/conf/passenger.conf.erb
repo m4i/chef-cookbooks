@@ -1,0 +1,3 @@
+passenger_root <%= node.nginx.passenger.prefix %>;
+passenger_ruby <%= node.ruby.prefix %>/bin/ruby;
+passenger_show_version_in_header off;

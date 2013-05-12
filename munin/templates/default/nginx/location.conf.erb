@@ -1,0 +1,38 @@
+location <%= @path %>/static/ {
+    alias <%= node.munin.htmldir %>/static/;
+    <%- if node.munin[:www_allow] -%>
+
+      <%- Array(node.munin[:www_allow]).each do |address| -%>
+    allow <%= address %>
+      <%- end -%>
+    deny all;
+    <%- end -%>
+}
+
+location <%= @path %>/ {
+    <%- if node.munin[:www_allow] -%>
+      <%- Array(node.munin[:www_allow]).each do |address| -%>
+    allow <%= address %>
+      <%- end -%>
+    deny all;
+
+    <%- end -%>
+    fastcgi_split_path_info ^(<%= @path %>)(.*);
+    fastcgi_param           PATH_INFO $fastcgi_path_info;
+    fastcgi_pass            unix:<%= node.munin.rundir %>/munin-fcgi-html.sock;
+    include                 fastcgi_params;
+}
+
+location ^~ /munin-cgi/munin-cgi-graph/ {
+    <%- if node.munin[:www_allow] -%>
+      <%- Array(node.munin[:www_allow]).each do |address| -%>
+    allow <%= address %>
+      <%- end -%>
+    deny all;
+
+    <%- end -%>
+    fastcgi_split_path_info ^(/munin-cgi/munin-cgi-graph)(.*);
+    fastcgi_param           PATH_INFO $fastcgi_path_info;
+    fastcgi_pass            unix:<%= node.munin.rundir %>/munin-fcgi-graph.sock;
+    include                 fastcgi_params;
+}

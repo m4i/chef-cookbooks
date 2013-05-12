@@ -1,0 +1,2 @@
+supports 'ubuntu'
+depends  'firewall'

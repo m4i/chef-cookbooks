@@ -1,0 +1,9 @@
+description "grb_ts"
+
+start on (filesystem and net-device-up IFACE=lo)
+stop on runlevel [!2345]
+
+respawn
+expect daemon
+
+exec <%= @daemon %>

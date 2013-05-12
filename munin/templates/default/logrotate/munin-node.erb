@@ -1,0 +1,9 @@
+<%= node.munin.logdir %>/munin-node.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    copytruncate
+    notifempty
+    create 640 <%= node.munin.user %> <%= node.platform == 'ubuntu' ? 'adm' : node.munin.group %>
+}

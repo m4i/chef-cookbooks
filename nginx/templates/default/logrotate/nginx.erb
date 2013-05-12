@@ -1,0 +1,14 @@
+<%= node.nginx.log_dir %>/*.log {
+    weekly
+    missingok
+    rotate 13
+    compress
+    delaycompress
+    notifempty
+    create 0640 <%= node.nginx.user %> <%= node.platform == 'ubuntu' ? 'adm' : node.nginx.group %>
+    sharedscripts
+    postrotate
+        [ ! -f <%= node.nginx.pid_path %> ] || \
+            kill -USR1 `cat <%= node.nginx.pid_path %>`
+    endscript
+}

@@ -1,0 +1,3 @@
+[ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ] || return
+
+chruby <%= node.ruby.version %>

@@ -1,0 +1,4 @@
+[ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ] || return
+
+source <%= node.chruby.source.root %>/share/chruby/chruby.sh
+source <%= node.chruby.source.root %>/share/chruby/auto.sh

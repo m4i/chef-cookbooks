@@ -1,0 +1,24 @@
+log_level 3
+log_file  <%= node.munin.logdir %>/munin-node.log
+pid_file  <%= node.munin.rundir %>/munin-node.pid
+
+background 1
+setsid     1
+
+<%- if node.munin[:master_address] -%>
+host       *
+port       4949
+cidr_allow <%= node.munin.master_address %>/32
+<%- else -%>
+host       127.0.0.1
+port       4949
+cidr_allow 127.0.0.1/32
+<%- end -%>
+
+ignore_file [\#~]$
+ignore_file DEADJOE$
+ignore_file \.bak$
+ignore_file %$
+ignore_file \.dpkg-(tmp|new|old|dist)$
+ignore_file \.rpm(save|new)$
+ignore_file \.pod$
