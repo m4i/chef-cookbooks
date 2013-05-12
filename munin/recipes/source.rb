@@ -50,7 +50,7 @@ source 'munin' do
   if node.munin.master
     build_command 'make'
   else
-    install_command = <<-EOC
+    install_command <<-EOC
       make
       paco -D make \
         install-common-prime \
