@@ -27,6 +27,7 @@ node.users.groups.each do |group|
       # mkdir -m 0700 ~/.ssh
       directory "#{user['home']}/.ssh" do
         owner user['name']
+        group user['gid'] || user['name']
         mode  0700
       end
 
@@ -35,6 +36,8 @@ node.users.groups.each do |group|
       file "#{user['home']}/.ssh/authorized_keys" do
         action  :create
         content pubkeys[user['name']].join("\n") + "\n"
+        owner   user['name']
+        group   user['gid'] || user['name']
         mode    0600
       end
     end
