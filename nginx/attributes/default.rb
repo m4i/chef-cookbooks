@@ -15,12 +15,12 @@ default.nginx.tap do |d|
   d.default_host = node.fqdn
 
   d.passenger.enable  = false
-  d.passenger.version = '4.0.1'
+  d.passenger.version = '4.0.2'
 end
 
 default.nginx.source.tap do |s|
   s.root    = node[:source] && node[:source][:root] || '/usr/local'
-  s.version = '1.4.0'
+  s.version = '1.4.1'
   s.url     = "http://nginx.org/download/nginx-#{node.nginx.source.version}.tar.gz"
 
   s.configure_options = %W(

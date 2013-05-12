@@ -17,6 +17,6 @@ end
 
 default.munin.source.tap do |s|
   s.root    = node[:source] && node[:source][:root] || '/usr/local'
-  s.version = '2.0.13'
+  s.version = '2.0.14'
   s.url     = "http://download.sourceforge.net/project/munin/stable/#{node.munin.source.version}/munin-#{node.munin.source.version}.tar.gz"
 end
