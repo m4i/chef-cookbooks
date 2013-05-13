@@ -8,6 +8,7 @@ respawn
 
 pre-start script
     mkdir -p <%= node.munin.rundir %>
+    chown <%= node.munin.user %> <%= node.munin.rundir %>
 end script
 
 exec <%= node.munin.prefix %>/sbin/munin-node

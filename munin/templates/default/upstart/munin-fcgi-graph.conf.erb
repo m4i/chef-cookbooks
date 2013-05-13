@@ -8,6 +8,8 @@ respawn
 
 pre-start script
     mkdir -p <%= node.munin.rundir %>
+    chown <%= node.munin.user %> <%= node.munin.rundir %>
+
     LOG=<%= node.munin.logdir %>/munin-cgi-graph.log
     touch $LOG
     chown <%= node.munin.user%>:<%= node.nginx.group %> $LOG
