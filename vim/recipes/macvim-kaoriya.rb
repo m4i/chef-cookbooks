@@ -17,3 +17,11 @@ end
     mode   0644
   end
 end
+
+# https://code.google.com/p/macvim-kaoriya/wiki/Readme
+execute 'defaults write org.vim.MacVim MMZoomBoth -boolean YES' do
+  not_if { system('defaults read org.vim.MacVim MMZoomBoth >/dev/null 2>&1') }
+end
+execute 'defaults write org.vim.MacVim MMNativeFullScreen 0' do
+  not_if { system('defaults read org.vim.MacVim MMNativeFullScreen >/dev/null 2>&1') }
+end
