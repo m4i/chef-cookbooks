@@ -3,6 +3,7 @@ unless platform?('ubuntu')
 end
 
 source 'ruby-build' do
-  action          :install
-  install_command 'PREFIX=%{prefix} paco -D ./install.sh'
+  action  node['ruby-build'].source[:action]
+  build   false
+  install command: './install.sh', environment: { 'PREFIX' => '%{prefix}' }
 end

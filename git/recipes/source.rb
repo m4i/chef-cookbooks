@@ -20,20 +20,20 @@ value_for_platform(
 ).each {|pkg| package pkg }
 
 source 'git' do
-  action :install
+  action node.git.source[:action]
 
-  pre_create_symlinks -> source {
-    man_archive_name = File.basename(source[:man].url)
-    man_path         = "#{source[:prefix]}/share/man"
+  post_install -> {
+    man_archive_name = File.basename(attr.man_url)
+    man_path         = "#{attr.prefix}/share/man"
 
-    remote_file "#{source[:src_base_dir_path]}/#{man_archive_name}" do
+    remote_file File.join(attr.srcdir_parent, man_archive_name) do
       action :create_if_missing
-      source source[:man].url
+      source attr.man_url
       mode   0644
     end
 
     execute "tar xfo #{man_archive_name} -C #{man_path}" do
-      cwd    source[:src_base_dir_path]
+      cwd    attr.srcdir_parent
       not_if { ::File.exists?("#{man_path}/man1/git.1") }
     end
   }

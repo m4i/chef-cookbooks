@@ -6,6 +6,6 @@ execute "ruby-build #{ruby_build.version} #{ruby_build.prefix}" do
   not_if { ::File.exists?(ruby_build.prefix) }
 end
 
-gem_package 'bundler' do
-  gem_binary "#{ruby_build.prefix}/bin/gem"
-end
+node.default.jruby.prefix = ruby_build.prefix
+
+include_recipe 'jruby::install-basic-gems'

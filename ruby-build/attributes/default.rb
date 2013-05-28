@@ -3,9 +3,9 @@ default['ruby-build'].tap do |d|
 end
 
 default['ruby-build'].source.tap do |s|
-  s.root = node[:source] && node[:source][:root] || '/usr/local'
-
-  s.git.version   = '20130501'
-  s.git.reference = "v#{node['ruby-build'].source.git.version}"
-  s.git.url       = 'https://github.com/sstephenson/ruby-build.git'
+  s.github = 'sstephenson/ruby-build'
+  unless node['ruby-build'].source[:version]
+    s.version = LatestVersion.github(name: node['ruby-build'].source.github)
+  end
+  s.git_tag = "v#{node['ruby-build'].source.version}"
 end

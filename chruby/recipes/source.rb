@@ -5,8 +5,9 @@ end
 include_recipe 'build-essential'
 
 source 'chruby' do
-  action          :install
-  install_command 'PREFIX=%{prefix} paco -D make install'
+  action  node.chruby.source[:action]
+  build   false
+  install command: 'make install', environment: { 'PREFIX' => '%{prefix}' }
 end
 
 template '/etc/profile.d/chruby.sh' do

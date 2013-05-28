@@ -7,6 +7,7 @@ default.nginx.tap do |d|
   d.gid   = 980
   d.home  = '/var/lib/nginx'
 
+  d.conf_dir  = '/etc/nginx'
   d.log_dir   = '/var/log/nginx'
   d.pid_path  = '/var/run/nginx.pid'
   d.lock_path = '/var/lock/nginx.lock'
@@ -14,17 +15,23 @@ default.nginx.tap do |d|
 
   d.default_host = node.fqdn
 
-  d.passenger.enable  = false
-  d.passenger.version = '4.0.2'
+  d.passenger.enabled = false
+  if node.nginx.passenger.enabled && !node.nginx.passenger[:version]
+    d.passenger.version = LatestVersion.gem(name: 'passenger')
+  end
 end
 
 default.nginx.source.tap do |s|
-  s.root    = node[:source] && node[:source][:root] || '/usr/local'
-  s.version = '1.4.1'
-  s.url     = "http://nginx.org/download/nginx-#{node.nginx.source.version}.tar.gz"
+  unless node.nginx.source[:version]
+    s.version = LatestVersion.html(
+      url:     'http://nginx.org/download/',
+      pattern: /\d+\.\d*[02468]\.\d+/,
+    )
+  end
+  s.url = "http://nginx.org/download/nginx-#{node.nginx.source.version}.tar.gz"
 
   s.configure_options = %W(
-    --conf-path=/etc/nginx/nginx.conf
+    --conf-path=#{node.nginx.conf_dir}/nginx.conf
     --error-log-path=#{node.nginx.log_dir}/error.log
     --pid-path=#{node.nginx.pid_path}
     --lock-path=#{node.nginx.lock_path}
@@ -40,6 +47,7 @@ default.nginx.source.tap do |s|
     --http-scgi-temp-path=#{node.nginx.temp_dir}/scgi
 
     --with-http_ssl_module
+    --with-http_realip_module
     --with-http_gzip_static_module
     --with-http_stub_status_module
 
@@ -53,7 +61,6 @@ default.nginx.source.tap do |s|
     --without-http_memcached_module
     --without-http_limit_conn_module
     --without-http_limit_req_module
-    --without-http_limit_zone_module
     --without-http_browser_module
   )
 end

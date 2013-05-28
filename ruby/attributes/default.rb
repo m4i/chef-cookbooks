@@ -1,12 +1,20 @@
+base_url = 'http://ftp.ruby-lang.org/pub/ruby/'
+
 default.ruby.tap do |d|
   d.default_recipe = 'ruby-build'
-  d.version        = '2.0.0-p0'
+
+  unless node.ruby[:version]
+    d.version = LatestVersion.html(
+      url:     base_url,
+      pattern: /\d+(?:\.\d){2}-p\d+/,
+    )
+  end
 end
 
 default.ruby.source.tap do |s|
-  s.root    = node[:source] && node[:source][:root] || '/usr/local'
   s.version = node.ruby.version
-  s.url     = 'http://ftp.ruby-lang.org/pub/ruby/%s/ruby-%s.tar.bz2' % [
+  s.url     = '%s%s/ruby-%s.tar.bz2' % [
+    base_url,
     node.ruby.source.version.split('.').take(2).join('.'),
     node.ruby.source.version,
   ]

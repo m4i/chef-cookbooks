@@ -1,16 +1,12 @@
 source 'server-jre' do
-  action          :install
-  source_keys     %w( java oracle server-jre )
-  install_command false
+  action      node.java.oracle['server-jre'][:action]
+  source_keys %w( java oracle server-jre )
 
-  pre_build -> source {
-    directory File.dirname(source[:prefix]) do
-      mode 0755
-    end
-
-    execute "mv #{source[:app_name_with_version]} #{source[:prefix]}" do
-      cwd    source[:src_base_dir_path]
-      not_if { ::File.exists?(source[:prefix]) }
+  build   false
+  install -> {
+    # mv /usr/local/src/server-jre/1.7.0_21 /usr/local/app/server-jre/1.7.0_21
+    execute "mv #{attr.srcdir} #{attr.prefix}" do
+      not_if { installed? }
     end
   }
 end

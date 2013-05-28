@@ -1,3 +1,3 @@
-depends '_lib'
-depends 'paco'
+depends 'latest_version'
+depends 'source'
 depends 'ruby-build'

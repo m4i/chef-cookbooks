@@ -34,7 +34,7 @@ node.users.groups.each do |group|
       # cat {pubkeys} > ~/.ssh/authorized_keys
       # chmod 0600 ~/.ssh/authorized_keys
       file "#{user['home']}/.ssh/authorized_keys" do
-        action  :create
+        action  :create_if_missing
         content pubkeys[user['name']].join("\n") + "\n"
         owner   user['name']
         group   user['gid'] || user['name']

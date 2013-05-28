@@ -1,2 +1,3 @@
-depends '_lib'
-depends 'paco'
+depends 'apt'
+depends 'latest_version'
+depends 'source'

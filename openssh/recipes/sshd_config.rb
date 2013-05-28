@@ -4,16 +4,13 @@ end
 
 file '/etc/ssh/sshd_config' do
   only_if do
-    original_content = File.read(path)
-    content = original_content.dup
-
-    if node.openssh[:port]
-      content.sub!(/^#?(Port) .*/, "\\1 #{node.openssh.port}")
-    end
-    content.sub!(/^#?(PermitRootLogin) .*/,        '\1 no')
-    content.sub!(/^#?(PasswordAuthentication) .*/, '\1 no')
-
-    content(content) if content != original_content
+    content File.read(path).tap {|content|
+      if node[:openssh] && node.openssh[:port]
+        content.sub!(/^#?(Port) .*/, "\\1 #{node.openssh.port}")
+      end
+      content.sub!(/^#?(PermitRootLogin) .*/,        '\1 no')
+      content.sub!(/^#?(PasswordAuthentication) .*/, '\1 no')
+    }
   end
 
   notifies :restart, 'service[ssh]'

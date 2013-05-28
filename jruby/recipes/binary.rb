@@ -12,7 +12,7 @@ end
 
 archive_filename = File.basename(node.jruby.binary.url)
 
-remote_file "#{node.jruby.binary.package_dir}/#{archive_filename}" do
+remote_file File.join(node.jruby.binary.package_dir, archive_filename) do
   action :create_if_missing
   source node.jruby.binary.url
   mode   0644
@@ -27,10 +27,6 @@ link "#{node.jruby.binary.prefix}/bin/ruby" do
   to 'jruby'
 end
 
-%w( bundler jruby-openssl ).each do |gem|
-  execute "#{node.jruby.binary.prefix}/bin/jruby --1.9 -S gem install #{gem}" do
-    only_if do
-      Dir["#{node.jruby.binary.prefix}/lib/ruby/gems/*/gems/#{gem}-*"].empty?
-    end
-  end
-end
+node.default.jruby.prefix = node.jruby.binary.prefix
+
+include_recipe 'jruby::install-basic-gems'

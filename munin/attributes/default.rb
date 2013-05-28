@@ -16,7 +16,11 @@ default.munin.tap do |d|
 end
 
 default.munin.source.tap do |s|
-  s.root    = node[:source] && node[:source][:root] || '/usr/local'
-  s.version = '2.0.14'
-  s.url     = "http://download.sourceforge.net/project/munin/stable/#{node.munin.source.version}/munin-#{node.munin.source.version}.tar.gz"
+  s.github = 'munin-monitoring/munin'
+  unless node.munin.source[:version]
+    s.version = LatestVersion.github(
+      name:    node.munin.source.github,
+      pattern: /\d+\.\d*[02468]\.\d+/,
+    )
+  end
 end

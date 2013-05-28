@@ -4,6 +4,7 @@ prefix_parent = File.dirname(node.gurobi.prefix)
 directory prefix_parent do
   mode      0755
   recursive true
+  not_if    { File.exists?(path) }
 end
 
 # mkdir -p /usr/local/src

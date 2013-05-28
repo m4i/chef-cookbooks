@@ -1,5 +1,10 @@
 default.jruby.tap do |d|
-  d.version = '1.7.3'
+  unless node.jruby[:version]
+    d.version = LatestVersion.html(
+      url:    'http://jruby.org/download',
+      perfix: '/jruby-bin-'
+    )
+  end
 end
 
 default.jruby.binary.tap do |b|

@@ -1,4 +1,3 @@
 supports 'ubuntu'
-depends  '_lib'
-depends  'paco'
+depends  'source'
 depends  'nginx'

@@ -1,5 +1,5 @@
 supports 'ubuntu'
-depends  '_lib'
-depends  'paco'
+depends  'latest_version'
+depends  'source'
 depends  'ruby'
 depends  'ruby-build'

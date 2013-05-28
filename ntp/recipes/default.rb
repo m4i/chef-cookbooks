@@ -9,27 +9,24 @@ end
 
 file '/etc/ntp.conf' do
   only_if do
-    original_content = File.read(path)
-    content = original_content.dup
-
-    content.gsub!(/^(?=server (.*))/) do
-      '#' unless node.ntp.servers.include?($1)
-    end
-
-    content.rstrip!
-    content << "\n"
-
-    servers = ''
-    node.ntp.servers.each do |server|
-      unless content =~ /^server #{server}$/
-        servers << "server #{server}\n"
+    content File.read(path).tap {|content|
+      content.gsub!(/^(?=server (.*))/) do
+        '#' unless node.ntp.servers.include?($1)
       end
-    end
-    unless servers.empty?
-      content << "\n" << servers
-    end
 
-    content(content) if content != original_content
+      content.rstrip!
+      content << "\n"
+
+      servers = ''
+      node.ntp.servers.each do |server|
+        unless content =~ /^server #{server}$/
+          servers << "server #{server}\n"
+        end
+      end
+      unless servers.empty?
+        content << "\n" << servers
+      end
+    }
   end
 
   notifies :restart, 'service[ntp]'

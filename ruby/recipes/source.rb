@@ -1,11 +1,9 @@
 include_recipe 'ruby::depends'
 
 source 'ruby' do
-  action :install
-end
-
-gem_package 'bundler' do
-  gem_binary "#{node.ruby.source.root}/bin/gem"
+  action node.ruby.source[:action]
 end
 
 node.default.ruby.prefix = node.ruby.source.prefix
+
+include_recipe 'ruby::install-basic-gems'

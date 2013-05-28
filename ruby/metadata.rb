@@ -1,2 +1,2 @@
-depends '_lib'
-depends 'paco'
+depends 'latest_version'
+depends 'source'

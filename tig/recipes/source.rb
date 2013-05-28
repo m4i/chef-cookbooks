@@ -13,15 +13,20 @@ value_for_platform(
 ).each {|pkg| package pkg }
 
 source 'tig' do
-  action :install
+  action node.tig.source[:action]
 
   # build に必要な package が多いためデフォルトでインストールしない
   # https://github.com/jonas/tig/blob/master/INSTALL
   if node.tig.source.install_doc
-    pre_create_symlinks -> source {
-      execute "paco -p tig-doc-#{source[:version]} make install-doc" do
-        cwd    source[:src_dir_path]
-        not_if { ::File.exists?("#{source[:prefix]}/share/man") }
+    post_install -> {
+      command = 'make install-doc'
+      if @new_resource.use_paco?
+        command = "paco -p tig-doc-#{attr.path_version} #{command} "
+      end
+
+      execute command do
+        cwd    attr.srcdir
+        not_if { ::File.exists?(File.join(attr.prefix, 'share/man')) }
       end
     }
   end

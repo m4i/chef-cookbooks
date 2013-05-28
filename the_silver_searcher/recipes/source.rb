@@ -14,6 +14,6 @@ value_for_platform(
 ).each {|pkg| package pkg }
 
 source 'the_silver_searcher' do
-  action        :install
-  build_command './build.sh --prefix=%{prefix}'
+  action node.the_silver_searcher.source[:action]
+  build  './build.sh --prefix=%{prefix}'
 end

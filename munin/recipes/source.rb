@@ -45,34 +45,30 @@ end
 
 
 source 'munin' do
-  action :install
+  action node.munin.source[:action]
 
-  if node.munin.master
-    build_command 'make'
-  else
-    install_command <<-EOC
-      make
-      paco -D make \
+  build 'make'
+
+  unless node.munin.master
+    install <<-EOC
+      make \
         install-common-prime \
         install-node-prime \
         install-plugins-prime
     EOC
   end
 
-  pre_build -> source {
-    file "#{source[:src_dir_path]}/Makefile.config" do
+  pre_build -> {
+    file File.join(attr.srcdir, 'Makefile.config') do
       only_if do
-        original_content = File.read(path)
-        content = original_content.dup
-
-        content.sub!(/^(PREFIX\s*=).*/)    { "#$1 #{source[:prefix]}" }
-        content.sub!(/^(CONFDIR\s*=).*/)   { "#$1 #{node.munin.confdir}" }
-        content.sub!(/^(DBDIR\s*=).*/)     { "#$1 #{node.munin.dbdir}" }
-        content.sub!(/^(DBDIRNODE\s*=).*/) { "#$1 #{node.munin.dbdirnode}" }
-        content.sub!(/^(LOGDIR\s*=).*/)    { "#$1 #{node.munin.logdir}"  }
-        content.sub!(/^(STATEDIR\s*=).*/)  { "#$1 #{node.munin.rundir}"  }
-
-        content(content) if content != original_content
+        content File.read(path).tap {|content|
+          content.sub!(/^(PREFIX\s*=).*/)    { "#$1 #{attr.prefix}" }
+          content.sub!(/^(CONFDIR\s*=).*/)   { "#$1 #{node.munin.confdir}" }
+          content.sub!(/^(DBDIR\s*=).*/)     { "#$1 #{node.munin.dbdir}" }
+          content.sub!(/^(DBDIRNODE\s*=).*/) { "#$1 #{node.munin.dbdirnode}" }
+          content.sub!(/^(LOGDIR\s*=).*/)    { "#$1 #{node.munin.logdir}"  }
+          content.sub!(/^(STATEDIR\s*=).*/)  { "#$1 #{node.munin.rundir}"  }
+        }
       end
     end
   }
@@ -80,8 +76,8 @@ end
 
 
 node.default.munin.prefix  = node.munin.source.root
-node.default.munin.htmldir = "#{node.munin.source.opt_dir_path}/www/docs"
-node.default.munin.cgidir  = "#{node.munin.source.opt_dir_path}/www/cgi"
+node.default.munin.htmldir = "#{node.munin.source.optdir}/www/docs"
+node.default.munin.cgidir  = "#{node.munin.source.optdir}/www/cgi"
 
 include_recipe 'munin::node-setup'
 include_recipe 'munin::master-setup' if node.munin.master

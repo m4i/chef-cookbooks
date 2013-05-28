@@ -1,8 +1,9 @@
 default.git.source.tap do |s|
-  s.root    = node[:source] && node[:source][:root] || '/usr/local'
-  s.version = '1.8.2.3'
+  unless node.git.source[:version]
+    s.version = LatestVersion.google_code(name: 'git-core')
+  end
   s.url     = "https://git-core.googlecode.com/files/git-#{node.git.source.version}.tar.gz"
-  s.man.url = "https://git-core.googlecode.com/files/git-manpages-#{node.git.source.version}.tar.gz"
+  s.man_url = "https://git-core.googlecode.com/files/git-manpages-#{node.git.source.version}.tar.gz"
 
   s.configure_options = %w(
     --with-curl

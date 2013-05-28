@@ -19,18 +19,18 @@ end
 host = node.munin[:www_host] || 'default'
 
 if node.munin[:www_host]
-  template "/etc/nginx/sites/#{host}.conf" do
+  template "#{node.nginx.conf_dir}/sites/#{host}.conf" do
     mode     0644
     source   'nginx/server.conf.erb'
     notifies :run, 'execute[nginx-quit]'
   end
 end
 
-directory "/etc/nginx/sites/#{host}" do
+directory "#{node.nginx.conf_dir}/sites/#{host}" do
   mode 0755
 end
 
-template "/etc/nginx/sites/#{host}/munin.conf" do
+template "#{node.nginx.conf_dir}/sites/#{host}/munin.conf" do
   mode       0644
   source    'nginx/location.conf.erb'
   variables path: node.munin[:www_host] ? '' : '/munin'
